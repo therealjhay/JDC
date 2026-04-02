@@ -27,6 +27,8 @@ export default function EditProductPage() {
   const [saveStatus, setSaveStatus] = useState('');
   const [variantError, setVariantError] = useState('');
   const [imageError, setImageError] = useState('');
+  const [imageVariant, setImageVariant] = useState('');
+  const [imagePrimary, setImagePrimary] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && !localStorage.getItem('auth_token')) {
@@ -40,8 +42,8 @@ export default function EditProductPage() {
         name: product.name,
         description: product.description || '',
         base_price: product.base_price,
-        brand: product.brand?.id || '',
-        category: product.category?.id || '',
+        brand: product.brand || '',
+        category: product.category || '',
         is_active: product.is_active,
       });
     }
@@ -86,12 +88,14 @@ export default function EditProductPage() {
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
     setImageError('');
     const formData = new FormData();
-    formData.append('image', file);
+    files.forEach((file) => formData.append('images', file));
     formData.append('product', id);
+    if (imageVariant) formData.append('variant', imageVariant);
+    if (imagePrimary) formData.append('primary_index', '0');
     try {
       await uploadImage.mutateAsync(formData);
       refetch();
@@ -241,11 +245,39 @@ export default function EditProductPage() {
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
               onChange={handleImageUpload}
               className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-yellow-50 file:text-yellow-700 hover:file:bg-yellow-100"
             />
             {uploadImage.isPending && <p className="text-sm text-gray-500 mt-2">Uploading...</p>}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div>
+              <label className="block text-xs text-gray-600 mb-1">Attach To Variant (optional)</label>
+              <select
+                value={imageVariant}
+                onChange={(e) => setImageVariant(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              >
+                <option value="">— Product Gallery —</option>
+                {product.variants?.map((variant) => (
+                  <option key={variant.id} value={variant.id}>
+                    {variant.color || variant.strap_type || variant.size || variant.sku || 'Variant'}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-center gap-3 mt-5">
+              <input
+                type="checkbox"
+                id="image_primary"
+                checked={imagePrimary}
+                onChange={(e) => setImagePrimary(e.target.checked)}
+                className="w-4 h-4 accent-yellow-400"
+              />
+              <label htmlFor="image_primary" className="text-sm font-medium text-gray-700">Set first image as primary</label>
+            </div>
           </div>
         </div>
 

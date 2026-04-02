@@ -59,7 +59,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white rounded-xl shadow-sm p-6">
             <h2 className="text-lg font-bold text-gray-900 mb-4">Products</h2>
             <div className="flex gap-4">
@@ -68,6 +68,17 @@ export default function AdminDashboard() {
               </Link>
               <Link href="/admin/products/new" className="bg-yellow-400 text-gray-900 px-4 py-2 rounded-lg hover:bg-yellow-300 transition-colors text-sm font-medium">
                 + Add Product
+              </Link>
+            </div>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <h2 className="text-lg font-bold text-gray-900 mb-4">Catalog</h2>
+            <div className="flex gap-4">
+              <Link href="/admin/brands" className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm">
+                Brands
+              </Link>
+              <Link href="/admin/categories" className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm">
+                Categories
               </Link>
             </div>
           </div>

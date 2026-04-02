@@ -7,7 +7,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-key-change-in-production')
 
-DEBUG = config('DEBUG', default=True, cast=bool)
+_DEBUG_RAW = config('DEBUG', default='True')
+# Accept non-boolean strings like "release" without crashing.
+DEBUG = str(_DEBUG_RAW).lower() in ('1', 'true', 't', 'yes', 'y', 'on')
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 
@@ -75,7 +77,7 @@ _DATABASE_URL = config('DATABASE_URL', default='')
 if _DATABASE_URL:
     import re
     _match = re.match(
-        r'postgresql://(?P<user>[^:]+):(?P<password>[^@]+)@(?P<host>[^:]+):(?P<port>\d+)/(?P<name>.+)',
+        r'^postgres(?:ql)?://(?P<user>[^:]+):(?P<password>[^@]+)@(?P<host>[^:/]+)(?::(?P<port>\d+))?/(?P<name>.+)',
         _DATABASE_URL
     )
     if _match:
@@ -86,7 +88,7 @@ if _DATABASE_URL:
                 'USER': _match.group('user'),
                 'PASSWORD': _match.group('password'),
                 'HOST': _match.group('host'),
-                'PORT': _match.group('port'),
+                'PORT': _match.group('port') or '5432',
             }
         }
     else:

@@ -118,9 +118,9 @@ Please confirm availability.`;
             {/* Product Info */}
             <div className="p-8">
               <div className="mb-2">
-                <span className="text-sm text-gray-500 uppercase tracking-wide">{product.brand?.name}</span>
-                {product.category && (
-                  <span className="ml-3 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">{product.category.name}</span>
+                <span className="text-sm text-gray-500 uppercase tracking-wide">{product.brand_detail?.name || 'Unknown Brand'}</span>
+                {product.category_detail && (
+                  <span className="ml-3 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">{product.category_detail.name}</span>
                 )}
               </div>
               <h1 className="text-3xl font-bold text-gray-900 mb-4">{product.name}</h1>

@@ -35,7 +35,7 @@ export default function ProductCard({ product }: Props) {
           )}
         </div>
         <div className="p-4">
-          <p className="text-xs text-gray-500 uppercase tracking-wide">{product.brand?.name || 'Unknown Brand'}</p>
+          <p className="text-xs text-gray-500 uppercase tracking-wide">{product.brand_detail?.name || 'Unknown Brand'}</p>
           <h3 className="mt-1 text-gray-900 font-semibold text-lg line-clamp-2 group-hover:text-yellow-600 transition-colors">
             {product.name}
           </h3>

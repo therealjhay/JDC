@@ -65,7 +65,7 @@ export default function AdminProductsPage() {
                 {data?.results.map((product) => (
                   <tr key={product.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 font-medium text-gray-900">{product.name}</td>
-                    <td className="px-6 py-4 text-gray-600">{product.brand?.name || '—'}</td>
+                    <td className="px-6 py-4 text-gray-600">{product.brand_detail?.name || '—'}</td>
                     <td className="px-6 py-4 text-gray-600">
                       {new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0 }).format(Number(product.base_price))}
                     </td>

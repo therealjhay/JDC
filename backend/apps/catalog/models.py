@@ -1,5 +1,16 @@
 import uuid
 from django.db import models
+from django.utils.text import slugify
+
+
+def _generate_unique_slug(model, value, instance_id=None):
+    base = slugify(value)[:200] or uuid.uuid4().hex[:8]
+    slug = base
+    counter = 1
+    while model.objects.filter(slug=slug).exclude(id=instance_id).exists():
+        slug = f"{base}-{counter}"
+        counter += 1
+    return slug
 
 
 class Category(models.Model):
@@ -14,6 +25,11 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = _generate_unique_slug(Category, self.name, self.id)
+        super().save(*args, **kwargs)
+
 
 class Brand(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -23,6 +39,11 @@ class Brand(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = _generate_unique_slug(Brand, self.name, self.id)
+        super().save(*args, **kwargs)
 
 
 class Product(models.Model):
@@ -39,6 +60,11 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = _generate_unique_slug(Product, self.name, self.id)
+        super().save(*args, **kwargs)
 
 
 class Variant(models.Model):

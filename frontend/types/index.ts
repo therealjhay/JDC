@@ -34,8 +34,10 @@ export interface Product {
   name: string;
   slug: string;
   description: string;
-  brand: Brand | null;
-  category: Category | null;
+  brand: string | null;
+  brand_detail?: Brand | null;
+  category: string | null;
+  category_detail?: Category | null;
   base_price: string;
   is_active: boolean;
   images: ProductImage[];

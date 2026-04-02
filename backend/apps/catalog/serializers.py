@@ -33,7 +33,7 @@ class VariantSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    images = ProductImageSerializer(many=True, read_only=True)
+    images = serializers.SerializerMethodField()
     variants = VariantSerializer(many=True, read_only=True)
     brand_detail = BrandSerializer(source='brand', read_only=True)
     category_detail = CategorySerializer(source='category', read_only=True)
@@ -46,3 +46,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'created_at', 'updated_at', 'images', 'variants',
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']
+
+    def get_images(self, obj):
+        images = obj.images.filter(variant__isnull=True)
+        return ProductImageSerializer(images, many=True).data
