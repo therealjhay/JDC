@@ -2,29 +2,19 @@ services:
   - type: web
     name: jdc-backend
     env: python
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate
-    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
     rootDir: backend
+    plan: free
+    buildCommand: "pip install -r requirements.txt && python manage.py migrate"
+    startCommand: "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT"
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.4
       - key: SECRET_KEY
         generateValue: true
-      - key: DEBUG
-        value: "False"
       - key: ALLOWED_HOSTS
-        value: ".onrender.com"
-      - key: DATABASE_URL
-        fromDatabase:
-          name: jdc-db
-          property: connectionString
-      - key: CLOUDINARY_CLOUD_NAME
-        sync: false
-      - key: CLOUDINARY_API_KEY
-        sync: false
-      - key: CLOUDINARY_API_SECRET
-        sync: false
+        value: "*"
       - key: CORS_ALLOWED_ORIGINS
-        sync: false
+        value: "https://jdc-frontend-deployment-url.vercel.app,http://localhost:3000"
+      - key: WEB_CONCURRENCY
+        value: 4
 
-databases:
-  - name: jdc-db
-    plan: free
