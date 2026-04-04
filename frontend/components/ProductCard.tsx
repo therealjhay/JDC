@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Product } from '@/types';
+import { formatNGN } from '@/lib/format';
 
 interface Props {
   product: Product;
@@ -8,15 +9,11 @@ interface Props {
 
 export default function ProductCard({ product }: Props) {
   const primaryImage = product.images?.find((img) => img.is_primary) || product.images?.[0];
-  const formattedPrice = new Intl.NumberFormat('en-NG', {
-    style: 'currency',
-    currency: 'NGN',
-    minimumFractionDigits: 0,
-  }).format(Number(product.base_price));
+  const formattedPrice = formatNGN(product.base_price);
 
   return (
-    <Link href={`/products/${product.id}`} className="group">
-      <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+    <Link href={`/products/${product.id}`} className="group focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:ring-offset-2 rounded-xl">
+      <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 relative">
         <div className="relative h-64 bg-gray-100">
           {primaryImage ? (
             <Image
@@ -33,13 +30,18 @@ export default function ProductCard({ product }: Props) {
               </svg>
             </div>
           )}
+          <div className="absolute inset-0 flex items-end justify-end p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="bg-gray-900/90 text-white text-xs font-semibold px-3 py-2 rounded-full">
+              Quick view →
+            </span>
+          </div>
         </div>
         <div className="p-4">
           <p className="text-xs text-gray-500 uppercase tracking-wide">{product.brand_detail?.name || 'Unknown Brand'}</p>
           <h3 className="mt-1 text-gray-900 font-semibold text-lg line-clamp-2 group-hover:text-yellow-600 transition-colors">
             {product.name}
           </h3>
-          <p className="mt-2 text-yellow-600 font-bold text-xl">
+          <p className="mt-2 text-amber-700 font-bold text-xl">
             From {formattedPrice}
           </p>
           <div className="mt-2">

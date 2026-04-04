@@ -23,31 +23,31 @@ export function useProduct(id: string) {
   });
 }
 
-export function useCategories() {
+export function useCategories(params?: Record<string, string>) {
   return useQuery<PaginatedResponse<Category>>({
-    queryKey: ['categories'],
+    queryKey: ['categories', params],
     queryFn: async () => {
-      const res = await api.get('/api/categories/');
+      const res = await api.get('/api/categories/', { params });
       return res.data;
     },
   });
 }
 
-export function useBrands() {
+export function useBrands(params?: Record<string, string>) {
   return useQuery<PaginatedResponse<Brand>>({
-    queryKey: ['brands'],
+    queryKey: ['brands', params],
     queryFn: async () => {
-      const res = await api.get('/api/brands/');
+      const res = await api.get('/api/brands/', { params });
       return res.data;
     },
   });
 }
 
-export function useOrders() {
+export function useOrders(params?: Record<string, string>) {
   return useQuery<PaginatedResponse<Order>>({
-    queryKey: ['orders'],
+    queryKey: ['orders', params],
     queryFn: async () => {
-      const res = await api.get('/api/orders/');
+      const res = await api.get('/api/orders/', { params });
       return res.data;
     },
   });

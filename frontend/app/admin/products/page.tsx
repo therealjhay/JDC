@@ -1,21 +1,39 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useProducts } from '@/lib/hooks';
 import { useDeleteProduct } from '@/lib/adminHooks';
+import { useRequireAdmin } from '@/lib/useRequireAdmin';
+import AdminLayout from '@/components/admin/AdminLayout';
+import { useDebouncedValue } from '@/lib/useDebouncedValue';
+import { formatNGN } from '@/lib/format';
+
+export const dynamic = 'force-dynamic';
 
 export default function AdminProductsPage() {
-  const router = useRouter();
-  const { data, isLoading, refetch } = useProducts({ page_size: '100' });
+  useRequireAdmin();
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const debouncedSearch = useDebouncedValue(search, 300);
+
+  const PAGE_SIZE = 20;
+  const { data, isLoading, refetch } = useProducts({
+    page: String(page),
+    page_size: String(PAGE_SIZE),
+    ...(debouncedSearch ? { search: debouncedSearch } : {}),
+  });
   const deleteProduct = useDeleteProduct();
+  const totalPages = useMemo(() => {
+    if (!data?.count) return 1;
+    return Math.max(1, Math.ceil(data.count / PAGE_SIZE));
+  }, [data?.count]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && !localStorage.getItem('auth_token')) {
-      router.push('/admin/login');
+    if (page > totalPages) {
+      setPage(totalPages);
     }
-  }, [router]);
+  }, [page, totalPages]);
 
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
@@ -28,18 +46,31 @@ export default function AdminProductsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-gray-900 text-white px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <Link href="/admin" className="text-gray-300 hover:text-white text-sm">← Dashboard</Link>
-          <h1 className="text-xl font-bold text-yellow-400">Manage Products</h1>
-        </div>
+    <AdminLayout
+      title="Manage Products"
+      backHref="/admin"
+      backLabel="← Dashboard"
+      actions={(
         <Link href="/admin/products/new" className="bg-yellow-400 text-gray-900 px-4 py-2 rounded-lg font-medium text-sm hover:bg-yellow-300 transition-colors">
           + Add Product
         </Link>
-      </nav>
-
+      )}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
+          <div className="flex flex-col md:flex-row gap-3 md:items-center">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+              placeholder="Search products..."
+              className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            />
+            <div className="text-sm text-gray-500">
+              {data?.count ?? 0} product{(data?.count ?? 0) === 1 ? '' : 's'}
+            </div>
+          </div>
+        </div>
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           {isLoading ? (
             <div className="flex justify-center py-20">
@@ -67,7 +98,7 @@ export default function AdminProductsPage() {
                     <td className="px-6 py-4 font-medium text-gray-900">{product.name}</td>
                     <td className="px-6 py-4 text-gray-600">{product.brand_detail?.name || '—'}</td>
                     <td className="px-6 py-4 text-gray-600">
-                      {new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0 }).format(Number(product.base_price))}
+                      {formatNGN(product.base_price)}
                     </td>
                     <td className="px-6 py-4 text-gray-600">{product.variants?.length ?? 0}</td>
                     <td className="px-6 py-4">
@@ -97,7 +128,42 @@ export default function AdminProductsPage() {
             </table>
           )}
         </div>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-6">
+          <div className="text-sm text-gray-500">
+            Page {page} of {totalPages}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPage(1)}
+              disabled={page === 1}
+              className="px-3 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50 transition-colors"
+            >
+              First
+            </button>
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={!data?.previous}
+              className="px-4 py-2 bg-gray-900 text-white rounded-lg disabled:opacity-40 hover:bg-gray-700 transition-colors"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => setPage((p) => p + 1)}
+              disabled={!data?.next}
+              className="px-4 py-2 bg-gray-900 text-white rounded-lg disabled:opacity-40 hover:bg-gray-700 transition-colors"
+            >
+              Next
+            </button>
+            <button
+              onClick={() => setPage(totalPages)}
+              disabled={page === totalPages}
+              className="px-3 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50 transition-colors"
+            >
+              Last
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }

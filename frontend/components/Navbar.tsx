@@ -14,11 +14,11 @@ export default function Navbar() {
             JDC Watches
           </Link>
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="hover:text-yellow-400 transition-colors">Home</Link>
-            <Link href="/products" className="hover:text-yellow-400 transition-colors">Watches</Link>
+            <Link href="/" className="hover:text-yellow-400 transition-colors focus-visible:ring-2 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded-sm">Home</Link>
+            <Link href="/products" className="hover:text-yellow-400 transition-colors focus-visible:ring-2 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded-sm">Watches</Link>
           </div>
           <button
-            className="md:hidden"
+            className="md:hidden focus-visible:ring-2 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded-md"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >
@@ -29,8 +29,8 @@ export default function Navbar() {
         </div>
         {isOpen && (
           <div className="md:hidden pb-4 space-y-2">
-            <Link href="/" className="block hover:text-yellow-400 transition-colors">Home</Link>
-            <Link href="/products" className="block hover:text-yellow-400 transition-colors">Watches</Link>
+            <Link href="/" className="block hover:text-yellow-400 transition-colors focus-visible:ring-2 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded-sm">Home</Link>
+            <Link href="/products" className="block hover:text-yellow-400 transition-colors focus-visible:ring-2 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded-sm">Watches</Link>
           </div>
         )}
       </div>

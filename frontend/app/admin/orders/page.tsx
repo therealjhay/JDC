@@ -1,37 +1,84 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useEffect, useMemo, useState } from 'react';
 import { useOrders } from '@/lib/hooks';
 import { useUpdateOrderStatus } from '@/lib/adminHooks';
+import { useRequireAdmin } from '@/lib/useRequireAdmin';
+import AdminLayout from '@/components/admin/AdminLayout';
+import { useDebouncedValue } from '@/lib/useDebouncedValue';
+
+export const dynamic = 'force-dynamic';
 
 const ORDER_STATUSES = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
 
 export default function AdminOrdersPage() {
-  const router = useRouter();
-  const { data, isLoading, refetch } = useOrders();
+  useRequireAdmin();
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [statusMessage, setStatusMessage] = useState('');
+  const [statusError, setStatusError] = useState('');
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const debouncedSearch = useDebouncedValue(search, 300);
+
+  const PAGE_SIZE = 20;
+  const { data, isLoading, refetch } = useOrders({
+    page: String(page),
+    page_size: String(PAGE_SIZE),
+    ...(debouncedSearch ? { search: debouncedSearch } : {}),
+  });
   const updateStatus = useUpdateOrderStatus();
+  const totalPages = useMemo(() => {
+    if (!data?.count) return 1;
+    return Math.max(1, Math.ceil(data.count / PAGE_SIZE));
+  }, [data?.count]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && !localStorage.getItem('auth_token')) {
-      router.push('/admin/login');
+    if (page > totalPages) {
+      setPage(totalPages);
     }
-  }, [router]);
+  }, [page, totalPages]);
 
   const handleStatusChange = async (orderId: string, status: string) => {
-    await updateStatus.mutateAsync({ id: orderId, status });
-    refetch();
+    setStatusMessage('');
+    setStatusError('');
+    setUpdatingId(orderId);
+    try {
+      await updateStatus.mutateAsync({ id: orderId, status });
+      setStatusMessage('Order status updated.');
+      refetch();
+    } catch {
+      setStatusError('Failed to update order status.');
+    } finally {
+      setUpdatingId(null);
+      setTimeout(() => {
+        setStatusMessage('');
+        setStatusError('');
+      }, 2000);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-gray-900 text-white px-6 py-4 flex items-center gap-4">
-        <Link href="/admin" className="text-gray-300 hover:text-white text-sm">← Dashboard</Link>
-        <h1 className="text-xl font-bold text-yellow-400">Orders</h1>
-      </nav>
-
+    <AdminLayout title="Orders" backHref="/admin" backLabel="← Dashboard">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
+          <div className="flex flex-col md:flex-row gap-3 md:items-center">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+              placeholder="Search by customer or phone..."
+              className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            />
+            <div className="text-sm text-gray-500">
+              {data?.count ?? 0} order{(data?.count ?? 0) === 1 ? '' : 's'}
+            </div>
+          </div>
+        </div>
+        {(statusMessage || statusError) && (
+          <div className={`mb-4 px-4 py-3 rounded-lg text-sm ${statusError ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-green-50 text-green-700 border border-green-200'}`}>
+            {statusError || statusMessage}
+          </div>
+        )}
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           {isLoading ? (
             <div className="flex justify-center py-20">
@@ -63,6 +110,7 @@ export default function AdminOrdersPage() {
                         <select
                           value={order.status}
                           onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                          disabled={updatingId === order.id}
                           className={`text-xs font-medium px-2 py-1 rounded-full border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-400 ${
                             order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                             order.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
@@ -85,7 +133,42 @@ export default function AdminOrdersPage() {
             </div>
           )}
         </div>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-6">
+          <div className="text-sm text-gray-500">
+            Page {page} of {totalPages}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPage(1)}
+              disabled={page === 1}
+              className="px-3 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50 transition-colors"
+            >
+              First
+            </button>
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={!data?.previous}
+              className="px-4 py-2 bg-gray-900 text-white rounded-lg disabled:opacity-40 hover:bg-gray-700 transition-colors"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => setPage((p) => p + 1)}
+              disabled={!data?.next}
+              className="px-4 py-2 bg-gray-900 text-white rounded-lg disabled:opacity-40 hover:bg-gray-700 transition-colors"
+            >
+              Next
+            </button>
+            <button
+              onClick={() => setPage(totalPages)}
+              disabled={page === totalPages}
+              className="px-3 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50 transition-colors"
+            >
+              Last
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }

@@ -33,7 +33,7 @@ export default function AdminLoginPage() {
         <p className="text-gray-500 text-center mb-8">Sign in to your admin account</p>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6" role="alert" aria-live="polite">
             {error}
           </div>
         )}
@@ -64,7 +64,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 text-gray-900 font-bold py-3 rounded-lg transition-colors"
+            className="w-full bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 text-gray-900 font-bold py-3 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:ring-offset-2"
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>

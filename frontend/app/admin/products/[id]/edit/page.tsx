@@ -1,14 +1,17 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useProduct, useCategories, useBrands } from '@/lib/hooks';
 import { useUpdateProduct, useCreateVariant, useDeleteVariant, useUploadImage, useDeleteImage } from '@/lib/adminHooks';
+import { useRequireAdmin } from '@/lib/useRequireAdmin';
+import AdminLayout from '@/components/admin/AdminLayout';
+
+export const dynamic = 'force-dynamic';
 
 export default function EditProductPage() {
-  const router = useRouter();
+  useRequireAdmin();
   const { id } = useParams<{ id: string }>();
   const { data: product, isLoading, refetch } = useProduct(id);
   const { data: categories } = useCategories();
@@ -29,12 +32,6 @@ export default function EditProductPage() {
   const [imageError, setImageError] = useState('');
   const [imageVariant, setImageVariant] = useState('');
   const [imagePrimary, setImagePrimary] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && !localStorage.getItem('auth_token')) {
-      router.push('/admin/login');
-    }
-  }, [router]);
 
   useEffect(() => {
     if (product) {
@@ -128,12 +125,7 @@ export default function EditProductPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-gray-900 text-white px-6 py-4 flex items-center gap-4">
-        <Link href="/admin/products" className="text-gray-300 hover:text-white text-sm">← Products</Link>
-        <h1 className="text-xl font-bold text-yellow-400">Edit: {product.name}</h1>
-      </nav>
-
+    <AdminLayout title={`Edit: ${product.name}`} backHref="/admin/products" backLabel="← Products">
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
         {/* Product Details */}
         <div className="bg-white rounded-xl shadow-sm p-8">
@@ -401,6 +393,6 @@ export default function EditProductPage() {
           </form>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }

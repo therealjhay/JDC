@@ -1,13 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useCategories, useBrands } from '@/lib/hooks';
 import { useCreateProduct } from '@/lib/adminHooks';
+import { useRequireAdmin } from '@/lib/useRequireAdmin';
+import AdminLayout from '@/components/admin/AdminLayout';
+
+export const dynamic = 'force-dynamic';
 
 export default function NewProductPage() {
   const router = useRouter();
+  useRequireAdmin();
   const { data: categories } = useCategories();
   const { data: brands } = useBrands();
   const createProduct = useCreateProduct();
@@ -21,12 +26,6 @@ export default function NewProductPage() {
     is_active: true,
   });
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && !localStorage.getItem('auth_token')) {
-      router.push('/admin/login');
-    }
-  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,12 +48,7 @@ export default function NewProductPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-gray-900 text-white px-6 py-4 flex items-center gap-4">
-        <Link href="/admin/products" className="text-gray-300 hover:text-white text-sm">← Products</Link>
-        <h1 className="text-xl font-bold text-yellow-400">Add New Product</h1>
-      </nav>
-
+    <AdminLayout title="Add New Product" backHref="/admin/products" backLabel="← Products">
       <div className="max-w-2xl mx-auto px-4 py-8">
         <div className="bg-white rounded-xl shadow-sm p-8">
           {error && (
@@ -158,6 +152,6 @@ export default function NewProductPage() {
           </form>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }

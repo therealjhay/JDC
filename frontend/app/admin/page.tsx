@@ -1,21 +1,19 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useProducts, useOrders } from '@/lib/hooks';
 import api from '@/lib/api';
+import { useRequireAdmin } from '@/lib/useRequireAdmin';
+import AdminLayout from '@/components/admin/AdminLayout';
+
+export const dynamic = 'force-dynamic';
 
 export default function AdminDashboard() {
   const router = useRouter();
+  useRequireAdmin();
   const { data: products } = useProducts({ page_size: '1' });
-  const { data: orders } = useOrders();
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && !localStorage.getItem('auth_token')) {
-      router.push('/admin/login');
-    }
-  }, [router]);
+  const { data: orders } = useOrders({ page_size: '5' });
 
   const handleLogout = async () => {
     try {
@@ -27,18 +25,17 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Admin Navbar */}
-      <nav className="bg-gray-900 text-white px-6 py-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-yellow-400">JDC Admin Dashboard</h1>
-        <div className="flex items-center gap-6">
+    <AdminLayout
+      title="JDC Admin Dashboard"
+      actions={(
+        <>
           <Link href="/" target="_blank" className="text-gray-300 hover:text-white text-sm">View Store →</Link>
           <button onClick={handleLogout} className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded-lg text-sm transition-colors">
             Logout
           </button>
-        </div>
-      </nav>
-
+        </>
+      )}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -53,7 +50,7 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-xl shadow-sm p-6">
             <p className="text-sm text-gray-500">Pending Orders</p>
             <p className="text-3xl font-bold text-yellow-600">
-              {orders?.results.filter((o) => o.status === 'pending').length ?? '—'}
+              {orders?.results?.filter((o) => o.status === 'pending').length ?? '—'}
             </p>
           </div>
         </div>
@@ -130,6 +127,6 @@ export default function AdminDashboard() {
           )}
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }
