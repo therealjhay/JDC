@@ -140,8 +140,9 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': config('CLOUDINARY_API_SECRET', default=''),
 }
 
-# CORS
+# CORS & CSRF
 CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='http://localhost:3000', cast=Csv())
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default=config('CORS_ALLOWED_ORIGINS', default='http://localhost:3000'), cast=Csv())
 CORS_ALLOW_CREDENTIALS = True
 
 # Django REST Framework
