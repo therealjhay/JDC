@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCategories, useBrands } from '@/lib/hooks';
-import { useCreateProduct } from '@/lib/adminHooks';
+import { useCreateProduct, useUploadProductImage } from '@/lib/adminHooks';
 import { useRequireAdmin } from '@/lib/useRequireAdmin';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { AxiosError } from 'axios';
@@ -22,6 +22,7 @@ export default function NewProductPage() {
   const { data: categories } = useCategories();
   const { data: brands } = useBrands();
   const createProduct = useCreateProduct();
+  const uploadProductImage = useUploadProductImage();
 
   const [form, setForm] = useState({
     name: '',
@@ -47,17 +48,24 @@ export default function NewProductPage() {
     setFieldErrors({});
     setGeneralError('');
 
-    const formData = new FormData();
-    formData.append('name', form.name);
-    formData.append('description', form.description);
-    formData.append('base_price', form.base_price);
-    formData.append('is_active', String(form.is_active));
-    if (form.brand) formData.append('brand', form.brand);
-    if (form.category) formData.append('category', form.category);
-    if (selectedImage) formData.append('image', selectedImage);
+    const productData = {
+      name: form.name,
+      description: form.description,
+      base_price: form.base_price,
+      is_active: form.is_active,
+      brand: form.brand || undefined,
+      category: form.category || undefined,
+    };
 
     try {
-      const product = await createProduct.mutateAsync(formData);
+      const product = await createProduct.mutateAsync(productData);
+
+      if (selectedImage) {
+        const imageFormData = new FormData();
+        imageFormData.append('image', selectedImage);
+        await uploadProductImage.mutateAsync({ formData: imageFormData, productId: product.id });
+      }
+
       navigate(`/admin/products/${product.id}/edit`);
     } catch (err) {
       const axiosError = err as AxiosError<{ [key: string]: string[] }>;

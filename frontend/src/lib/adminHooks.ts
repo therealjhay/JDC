@@ -4,7 +4,8 @@ import api from './api';
 export function useCreateProduct() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (formData: FormData) => api.post('/api/products/', formData).then(r => r.data),
+    mutationFn: (data: Record<string, unknown>) =>
+      api.post('/api/products/', data).then(r => r.data),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['products'] }),
   });
 }
@@ -51,6 +52,19 @@ export function useUploadImage() {
       api.post('/api/images/upload/', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       }).then(r => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['products'] }),
+  });
+}
+
+export function useUploadProductImage() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ formData, productId }: { formData: FormData; productId: string }) => {
+      formData.append('product', productId);
+      return api.post('/api/images/upload/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }).then(r => r.data);
+    },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['products'] }),
   });
 }
