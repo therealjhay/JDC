@@ -25,10 +25,10 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-navy-950 flex items-center justify-center">
-      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-navy-900 text-center mb-2">JDC Admin</h1>
-        <p className="text-gray-500 text-center mb-8">Sign in to your admin account</p>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="bg-white rounded-xl shadow-md p-6 sm:p-8 w-full max-w-md border border-gray-100">
+        <h1 className="text-xl sm:text-2xl font-bold text-primary-900 text-center mb-2">JDC Admin</h1>
+        <p className="text-gray-500 text-center mb-6 sm:mb-8 text-sm sm:text-base">Sign in to your admin account</p>
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6" role="alert" aria-live="polite">
@@ -44,7 +44,7 @@ export default function AdminLoginPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-navy-400"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
               placeholder="admin"
             />
           </div>
@@ -55,14 +55,14 @@ export default function AdminLoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-navy-400"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
               placeholder="••••••••"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-navy-600 hover:bg-navy-500 disabled:opacity-50 text-white font-bold py-3 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-navy-400 focus-visible:ring-offset-2"
+            className="w-full bg-accent-500 hover:bg-accent-600 disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition-colors"
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>

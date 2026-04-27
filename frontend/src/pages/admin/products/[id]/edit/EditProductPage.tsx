@@ -106,26 +106,26 @@ export default function EditProductPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-navy-600"></div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-accent-500"></div>
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <p className="text-red-500">Product not found.</p>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p className="text-red-500 text-sm sm:text-base">Product not found.</p>
       </div>
     );
   }
 
   return (
     <AdminLayout title={`Edit: ${product.name}`} backHref="/admin/products" backLabel="← Products">
-      <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
+      <div className="max-w-4xl mx-auto px-4 py-6 sm:py-8 space-y-6 sm:space-y-8">
         {/* Product Details */}
-        <div className="bg-white rounded-xl shadow-sm p-8">
-          <h2 className="text-lg font-bold text-navy-900 mb-6">Product Details</h2>
+        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 md:p-8 border border-gray-100">
+          <h2 className="text-base sm:text-lg font-bold text-primary-900 mb-4 sm:mb-6">Product Details</h2>
           <form onSubmit={handleSave} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
@@ -134,7 +134,7 @@ export default function EditProductPage() {
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-navy-400"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
               />
             </div>
             <div>
@@ -143,7 +143,7 @@ export default function EditProductPage() {
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 rows={3}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-navy-400"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -156,7 +156,7 @@ export default function EditProductPage() {
                   required
                   min="0"
                   step="0.01"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-navy-400"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
                 />
               </div>
               <div>
@@ -164,7 +164,7 @@ export default function EditProductPage() {
                 <select
                   value={form.brand}
                   onChange={(e) => setForm({ ...form, brand: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-navy-400"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
                 >
                   <option value="">— None —</option>
                   {brands?.results.map((b) => (
@@ -177,7 +177,7 @@ export default function EditProductPage() {
                 <select
                   value={form.category}
                   onChange={(e) => setForm({ ...form, category: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-navy-400"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
                 >
                   <option value="">— None —</option>
                   {categories?.results.map((c) => (
@@ -192,14 +192,14 @@ export default function EditProductPage() {
                 id="is_active"
                 checked={form.is_active}
                 onChange={(e) => setForm({ ...form, is_active: e.target.checked })}
-                className="w-4 h-4 accent-navy-600"
+                className="w-4 h-4 accent-accent-500"
               />
               <label htmlFor="is_active" className="text-sm font-medium text-gray-700">Active</label>
             </div>
             <button
               type="submit"
               disabled={updateProduct.isPending}
-              className="bg-navy-600 hover:bg-navy-500 disabled:opacity-50 text-white font-bold px-6 py-2 rounded-lg transition-colors"
+              className="bg-accent-500 hover:bg-accent-600 disabled:opacity-50 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors"
             >
               {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? '✓ Saved!' : saveStatus === 'error' ? 'Error!' : 'Save Changes'}
             </button>
@@ -207,17 +207,17 @@ export default function EditProductPage() {
         </div>
 
         {/* Images */}
-        <div className="bg-white rounded-xl shadow-sm p-8">
-          <h2 className="text-lg font-bold text-navy-900 mb-6">Images</h2>
+        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 md:p-8 border border-gray-100">
+          <h2 className="text-base sm:text-lg font-bold text-primary-900 mb-4 sm:mb-6">Images</h2>
           {imageError && <p className="text-red-500 text-sm mb-4">{imageError}</p>}
-          <div className="flex flex-wrap gap-4 mb-6">
+          <div className="flex flex-wrap gap-3 sm:gap-4 mb-6">
             {product.images?.map((img) => (
               <div key={img.id} className="relative group">
-                <div className="relative h-24 w-24 rounded-lg overflow-hidden border-2 border-gray-200">
+                <div className="relative h-20 w-20 sm:h-24 sm:w-24 rounded-lg overflow-hidden border-2 border-gray-200">
                   <img src={img.image_url} alt="" className="h-full w-full object-cover" loading="lazy" />
                 </div>
                 {img.is_primary && (
-                  <span className="absolute top-1 left-1 bg-navy-600 text-white text-xs px-1 rounded">Primary</span>
+                  <span className="absolute top-1 left-1 bg-primary-900 text-white text-xs px-1.5 py-0.5 rounded">Primary</span>
                 )}
                 <button
                   onClick={() => handleDeleteImage(img.id)}
@@ -236,7 +236,7 @@ export default function EditProductPage() {
               accept="image/jpeg,image/png,image/webp"
               multiple
               onChange={handleImageUpload}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-navy-50 file:text-navy-700 hover:file:bg-navy-100"
+              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-accent-50 file:text-accent-700 hover:file:bg-accent-100"
             />
             {uploadImage.isPending && <p className="text-sm text-gray-500 mt-2">Uploading...</p>}
           </div>
@@ -246,7 +246,7 @@ export default function EditProductPage() {
               <select
                 value={imageVariant}
                 onChange={(e) => setImageVariant(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-400"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
               >
                 <option value="">— Product Gallery —</option>
                 {product.variants?.map((variant) => (
@@ -262,7 +262,7 @@ export default function EditProductPage() {
                 id="image_primary"
                 checked={imagePrimary}
                 onChange={(e) => setImagePrimary(e.target.checked)}
-                className="w-4 h-4 accent-navy-600"
+                className="w-4 h-4 accent-accent-500"
               />
               <label htmlFor="image_primary" className="text-sm font-medium text-gray-700">Set first image as primary</label>
             </div>
@@ -270,34 +270,34 @@ export default function EditProductPage() {
         </div>
 
         {/* Variants */}
-        <div className="bg-white rounded-xl shadow-sm p-8">
-          <h2 className="text-lg font-bold text-navy-900 mb-6">Variants</h2>
+        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 md:p-8 border border-gray-100">
+          <h2 className="text-base sm:text-lg font-bold text-primary-900 mb-4 sm:mb-6">Variants</h2>
 
           {/* Existing variants */}
           {product.variants?.length > 0 && (
-            <div className="overflow-x-auto mb-8">
+            <div className="overflow-x-auto mb-6 sm:mb-8">
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 border-b">
                   <tr>
-                    <th className="text-left px-4 py-3 text-gray-600 font-medium">Color</th>
-                    <th className="text-left px-4 py-3 text-gray-600 font-medium">Strap</th>
-                    <th className="text-left px-4 py-3 text-gray-600 font-medium">Size</th>
-                    <th className="text-left px-4 py-3 text-gray-600 font-medium">Price</th>
-                    <th className="text-left px-4 py-3 text-gray-600 font-medium">Stock</th>
-                    <th className="text-left px-4 py-3 text-gray-600 font-medium">SKU</th>
-                    <th className="text-left px-4 py-3 text-gray-600 font-medium"></th>
+                    <th className="text-left px-3 sm:px-4 py-2.5 sm:py-3 text-gray-600 font-medium text-xs sm:text-sm">Color</th>
+                    <th className="text-left px-3 sm:px-4 py-2.5 sm:py-3 text-gray-600 font-medium text-xs sm:text-sm">Strap</th>
+                    <th className="text-left px-3 sm:px-4 py-2.5 sm:py-3 text-gray-600 font-medium text-xs sm:text-sm">Size</th>
+                    <th className="text-left px-3 sm:px-4 py-2.5 sm:py-3 text-gray-600 font-medium text-xs sm:text-sm">Price</th>
+                    <th className="text-left px-3 sm:px-4 py-2.5 sm:py-3 text-gray-600 font-medium text-xs sm:text-sm">Stock</th>
+                    <th className="text-left px-3 sm:px-4 py-2.5 sm:py-3 text-gray-600 font-medium text-xs sm:text-sm">SKU</th>
+                    <th className="text-left px-3 sm:px-4 py-2.5 sm:py-3 text-gray-600 font-medium text-xs sm:text-sm"></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
                   {product.variants.map((v) => (
                     <tr key={v.id}>
-                      <td className="px-4 py-3 text-gray-700">{v.color || '—'}</td>
-                      <td className="px-4 py-3 text-gray-700">{v.strap_type || '—'}</td>
-                      <td className="px-4 py-3 text-gray-700">{v.size || '—'}</td>
-                      <td className="px-4 py-3 text-gray-700">{v.price}</td>
-                      <td className="px-4 py-3 text-gray-700">{v.stock}</td>
-                      <td className="px-4 py-3 text-gray-700">{v.sku}</td>
-                      <td className="px-4 py-3">
+                      <td className="px-3 sm:px-4 py-2.5 sm:py-3 text-gray-700 text-xs sm:text-sm">{v.color || '—'}</td>
+                      <td className="px-3 sm:px-4 py-2.5 sm:py-3 text-gray-700 text-xs sm:text-sm">{v.strap_type || '—'}</td>
+                      <td className="px-3 sm:px-4 py-2.5 sm:py-3 text-gray-700 text-xs sm:text-sm">{v.size || '—'}</td>
+                      <td className="px-3 sm:px-4 py-2.5 sm:py-3 text-gray-700 text-xs sm:text-sm">{v.price}</td>
+                      <td className="px-3 sm:px-4 py-2.5 sm:py-3 text-gray-700 text-xs sm:text-sm">{v.stock}</td>
+                      <td className="px-3 sm:px-4 py-2.5 sm:py-3 text-gray-700 text-xs sm:text-sm">{v.sku}</td>
+                      <td className="px-3 sm:px-4 py-2.5 sm:py-3">
                         <button
                           onClick={() => handleDeleteVariant(v.id)}
                           className="text-red-600 hover:text-red-800 text-xs font-medium"
@@ -313,16 +313,16 @@ export default function EditProductPage() {
           )}
 
           {/* Add Variant Form */}
-          <h3 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Add Variant</h3>
+          <h3 className="text-xs sm:text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Add Variant</h3>
           {variantError && <p className="text-red-500 text-sm mb-4">{variantError}</p>}
-          <form onSubmit={handleAddVariant} className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <form onSubmit={handleAddVariant} className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
             <div>
               <label className="block text-xs text-gray-600 mb-1">Color</label>
               <input
                 type="text"
                 value={variantForm.color}
                 onChange={(e) => setVariantForm({ ...variantForm, color: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-400"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
                 placeholder="e.g. Black"
               />
             </div>
@@ -332,7 +332,7 @@ export default function EditProductPage() {
                 type="text"
                 value={variantForm.strap_type}
                 onChange={(e) => setVariantForm({ ...variantForm, strap_type: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-400"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
                 placeholder="e.g. Leather"
               />
             </div>
@@ -342,7 +342,7 @@ export default function EditProductPage() {
                 type="text"
                 value={variantForm.size}
                 onChange={(e) => setVariantForm({ ...variantForm, size: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-400"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
                 placeholder="e.g. 42mm"
               />
             </div>
@@ -355,7 +355,7 @@ export default function EditProductPage() {
                 required
                 min="0"
                 step="0.01"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-400"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
               />
             </div>
             <div>
@@ -365,7 +365,7 @@ export default function EditProductPage() {
                 value={variantForm.stock}
                 onChange={(e) => setVariantForm({ ...variantForm, stock: e.target.value })}
                 min="0"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-400"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
               />
             </div>
             <div>
@@ -374,14 +374,14 @@ export default function EditProductPage() {
                 type="text"
                 value={variantForm.sku}
                 onChange={(e) => setVariantForm({ ...variantForm, sku: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-400"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
               />
             </div>
             <div className="col-span-2 md:col-span-3">
               <button
                 type="submit"
                 disabled={createVariant.isPending}
-                className="bg-navy-900 hover:bg-navy-700 disabled:opacity-50 text-white font-medium px-6 py-2 rounded-lg transition-colors text-sm"
+                className="bg-primary-900 hover:bg-primary-700 disabled:opacity-50 text-white font-medium px-6 py-2.5 rounded-lg transition-colors text-sm"
               >
                 {createVariant.isPending ? 'Adding...' : '+ Add Variant'}
               </button>

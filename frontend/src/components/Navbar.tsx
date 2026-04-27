@@ -5,18 +5,18 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-navy-900 text-white shadow-lg">
+    <nav className="bg-primary-900 text-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-          <Link to="/" className="text-2xl font-bold text-navy-300">
+          <Link to="/" className="text-xl sm:text-2xl font-bold text-accent-400 tracking-tight">
             JDC Watches
           </Link>
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="hover:text-navy-300 transition-colors focus-visible:ring-2 focus-visible:ring-navy-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900 rounded-sm">Home</Link>
-            <Link to="/products" className="hover:text-navy-300 transition-colors focus-visible:ring-2 focus-visible:ring-navy-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900 rounded-sm">Watches</Link>
+            <Link to="/" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">Home</Link>
+            <Link to="/products" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">Watches</Link>
           </div>
           <button
-            className="md:hidden focus-visible:ring-2 focus-visible:ring-navy-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900 rounded-md"
+            className="md:hidden p-2 text-gray-300 hover:text-white"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >
@@ -26,9 +26,9 @@ export default function Navbar() {
           </button>
         </div>
         {isOpen && (
-          <div className="md:hidden pb-4 space-y-2">
-            <Link to="/" className="block hover:text-navy-300 transition-colors focus-visible:ring-2 focus-visible:ring-navy-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900 rounded-sm">Home</Link>
-            <Link to="/products" className="block hover:text-navy-300 transition-colors focus-visible:ring-2 focus-visible:ring-navy-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900 rounded-sm">Watches</Link>
+          <div className="md:hidden pb-4 space-y-2 border-t border-primary-800 pt-4">
+            <Link to="/" className="block text-gray-300 hover:text-white transition-colors text-sm font-medium py-2">Home</Link>
+            <Link to="/products" className="block text-gray-300 hover:text-white transition-colors text-sm font-medium py-2">Watches</Link>
           </div>
         )}
       </div>

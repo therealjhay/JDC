@@ -80,23 +80,23 @@ export default function ProductsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <h1 className="text-3xl font-bold text-navy-900 mb-8">Our Watch Collection</h1>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+        <h1 className="text-2xl sm:text-3xl font-bold text-primary-900 mb-6 sm:mb-8">Our Watch Collection</h1>
 
         {/* Filters */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-4 sm:p-6 mb-6 sm:mb-8 border border-gray-100">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <input
               type="text"
               placeholder="Search watches..."
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-navy-400"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
             />
             <select
               value={brand}
               onChange={(e) => { setBrand(e.target.value); setPage(1); }}
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-navy-400"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
             >
               <option value="">All Brands</option>
               {brands?.results.map((b) => (
@@ -106,7 +106,7 @@ export default function ProductsPage() {
             <select
               value={category}
               onChange={(e) => { setCategory(e.target.value); setPage(1); }}
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-navy-400"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
             >
               <option value="">All Categories</option>
               {categories?.results.map((c) => (
@@ -116,7 +116,7 @@ export default function ProductsPage() {
             <select
               value={ordering}
               onChange={(e) => { setOrdering(e.target.value); setPage(1); }}
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-navy-400"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
             >
               <option value="">Sort by</option>
               <option value="base_price">Price: Low to High</option>
@@ -129,38 +129,38 @@ export default function ProductsPage() {
         {/* Products Grid */}
         {isLoading ? (
           <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-navy-600"></div>
+            <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-accent-500"></div>
           </div>
         ) : error ? (
           <div className="text-center py-20" aria-live="polite">
-            <p className="text-red-500 text-lg">Failed to load products. Please try again.</p>
+            <p className="text-red-500 text-sm sm:text-lg">Failed to load products. Please try again.</p>
           </div>
         ) : data?.results.length === 0 ? (
           <div className="text-center py-20" aria-live="polite">
-            <p className="text-gray-500 text-lg">No watches found matching your criteria.</p>
+            <p className="text-gray-500 text-sm sm:text-lg">No watches found matching your criteria.</p>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {data?.results.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
 
             {/* Pagination */}
-            <div className="flex flex-col items-center gap-4 mt-10">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-col items-center gap-4 mt-8 sm:mt-10">
+              <div className="flex items-center gap-2 flex-wrap justify-center">
                 <button
                   onClick={() => setPage(1)}
                   disabled={page === 1}
-                  className="px-3 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50 transition-colors"
+                  className="px-3 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50 transition-colors text-sm sm:text-base"
                 >
                   First
                 </button>
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={!data?.previous}
-                  className="px-4 py-2 bg-navy-900 text-white rounded-lg disabled:opacity-40 hover:bg-navy-700 transition-colors"
+                  className="px-4 py-2 bg-primary-900 text-white rounded-lg disabled:opacity-40 hover:bg-primary-700 transition-colors text-sm sm:text-base"
                 >
                   Previous
                 </button>
@@ -170,7 +170,7 @@ export default function ProductsPage() {
                       key={p}
                       onClick={() => setPage(p)}
                       className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                        p === page ? 'bg-navy-600 text-white' : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                        p === page ? 'bg-accent-500 text-white' : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
                       }`}
                     >
                       {p}
@@ -180,19 +180,19 @@ export default function ProductsPage() {
                 <button
                   onClick={() => setPage((p) => p + 1)}
                   disabled={!data?.next}
-                  className="px-4 py-2 bg-navy-900 text-white rounded-lg disabled:opacity-40 hover:bg-navy-700 transition-colors"
+                  className="px-4 py-2 bg-primary-900 text-white rounded-lg disabled:opacity-40 hover:bg-primary-700 transition-colors text-sm sm:text-base"
                 >
                   Next
                 </button>
                 <button
                   onClick={() => setPage(totalPages)}
                   disabled={page === totalPages}
-                  className="px-3 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50 transition-colors"
+                  className="px-3 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50 transition-colors text-sm sm:text-base"
                 >
                   Last
                 </button>
               </div>
-              <span className="text-gray-600">
+              <span className="text-gray-600 text-xs sm:text-sm">
                 {data?.count} watches found • Page {page} of {totalPages}
               </span>
             </div>

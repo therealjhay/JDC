@@ -4,7 +4,7 @@ import api from './api';
 export function useCreateProduct() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: Record<string, unknown>) => api.post('/api/products/', data).then(r => r.data),
+    mutationFn: (formData: FormData) => api.post('/api/products/', formData).then(r => r.data),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['products'] }),
   });
 }

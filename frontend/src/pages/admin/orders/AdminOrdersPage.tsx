@@ -55,17 +55,17 @@ export default function AdminOrdersPage() {
 
   return (
     <AdminLayout title="Orders" backHref="/admin" backLabel="← Dashboard">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="bg-white rounded-lg shadow-sm p-4 mb-6 border border-gray-100">
           <div className="flex flex-col md:flex-row gap-3 md:items-center">
             <input
               type="text"
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               placeholder="Search by customer or phone..."
-              className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-navy-400"
+              className="flex-1 border border-gray-300 rounded-lg px-4 py-2.5 text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-400"
             />
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-gray-500 whitespace-nowrap">
               {data?.count ?? 0} order{(data?.count ?? 0) === 1 ? '' : 's'}
             </div>
           </div>
@@ -75,10 +75,10 @@ export default function AdminOrdersPage() {
             {statusError || statusMessage}
           </div>
         )}
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
           {isLoading ? (
             <div className="flex justify-center py-20">
-              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-navy-600"></div>
+              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-accent-500"></div>
             </div>
           ) : data?.results.length === 0 ? (
             <div className="text-center py-20 text-gray-500">No orders yet.</div>
@@ -87,27 +87,27 @@ export default function AdminOrdersPage() {
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 border-b">
                   <tr>
-                    <th className="text-left px-6 py-4 text-gray-600 font-medium">Customer</th>
-                    <th className="text-left px-6 py-4 text-gray-600 font-medium">Phone</th>
-                    <th className="text-left px-6 py-4 text-gray-600 font-medium">Items</th>
-                    <th className="text-left px-6 py-4 text-gray-600 font-medium">Status</th>
-                    <th className="text-left px-6 py-4 text-gray-600 font-medium">Date</th>
+                    <th className="text-left px-4 sm:px-6 py-3 text-gray-600 font-medium text-xs sm:text-sm">Customer</th>
+                    <th className="text-left px-4 sm:px-6 py-3 text-gray-600 font-medium text-xs sm:text-sm">Phone</th>
+                    <th className="text-left px-4 sm:px-6 py-3 text-gray-600 font-medium text-xs sm:text-sm">Items</th>
+                    <th className="text-left px-4 sm:px-6 py-3 text-gray-600 font-medium text-xs sm:text-sm">Status</th>
+                    <th className="text-left px-4 sm:px-6 py-3 text-gray-600 font-medium text-xs sm:text-sm">Date</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
                   {data?.results.map((order) => (
                     <tr key={order.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 font-medium text-navy-900">{order.customer_name}</td>
-                      <td className="px-6 py-4 text-gray-600">
-                        <a href={`tel:${order.phone}`} className="hover:text-navy-600">{order.phone}</a>
+                      <td className="px-4 sm:px-6 py-3 font-medium text-primary-900 text-xs sm:text-sm">{order.customer_name}</td>
+                      <td className="px-4 sm:px-6 py-3 text-gray-600 text-xs sm:text-sm">
+                        <a href={`tel:${order.phone}`} className="hover:text-accent-600">{order.phone}</a>
                       </td>
-                      <td className="px-6 py-4 text-gray-600">{order.items?.length ?? 0} item(s)</td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 sm:px-6 py-3 text-gray-600 text-xs sm:text-sm">{order.items?.length ?? 0} item(s)</td>
+                      <td className="px-4 sm:px-6 py-3">
                         <select
                           value={order.status}
                           onChange={(e) => handleStatusChange(order.id, e.target.value)}
                           disabled={updatingId === order.id}
-                          className={`text-xs font-medium px-2 py-1 rounded-full border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-navy-400 ${
+                          className={`text-xs font-medium px-2 py-1 rounded-full border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-400 ${
                             order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                             order.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
                             order.status === 'processing' ? 'bg-purple-100 text-purple-800' :
@@ -121,7 +121,7 @@ export default function AdminOrdersPage() {
                           ))}
                         </select>
                       </td>
-                      <td className="px-6 py-4 text-gray-600">{new Date(order.created_at).toLocaleDateString()}</td>
+                      <td className="px-4 sm:px-6 py-3 text-gray-600 text-xs sm:text-sm">{new Date(order.created_at).toLocaleDateString()}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -133,32 +133,32 @@ export default function AdminOrdersPage() {
           <div className="text-sm text-gray-500">
             Page {page} of {totalPages}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={() => setPage(1)}
               disabled={page === 1}
-              className="px-3 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50 transition-colors"
+              className="px-3 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50 transition-colors text-sm"
             >
               First
             </button>
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={!data?.previous}
-              className="px-4 py-2 bg-navy-900 text-white rounded-lg disabled:opacity-40 hover:bg-navy-700 transition-colors"
+              className="px-4 py-2 bg-primary-900 text-white rounded-lg disabled:opacity-40 hover:bg-primary-700 transition-colors text-sm"
             >
               Previous
             </button>
             <button
               onClick={() => setPage((p) => p + 1)}
               disabled={!data?.next}
-              className="px-4 py-2 bg-navy-900 text-white rounded-lg disabled:opacity-40 hover:bg-navy-700 transition-colors"
+              className="px-4 py-2 bg-primary-900 text-white rounded-lg disabled:opacity-40 hover:bg-primary-700 transition-colors text-sm"
             >
               Next
             </button>
             <button
               onClick={() => setPage(totalPages)}
               disabled={page === totalPages}
-              className="px-3 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50 transition-colors"
+              className="px-3 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50 transition-colors text-sm"
             >
               Last
             </button>
