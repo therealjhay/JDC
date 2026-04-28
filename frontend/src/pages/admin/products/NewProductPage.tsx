@@ -48,24 +48,22 @@ export default function NewProductPage() {
     setFieldErrors({});
     setGeneralError('');
 
-    const productData = {
-      name: form.name,
-      description: form.description,
-      base_price: form.base_price,
-      is_active: form.is_active,
-      brand: form.brand || undefined,
-      category: form.category || undefined,
-    };
+    // Generate slug from product name (lowercase, spaces to hyphens)
+    const slug = form.name.toLowerCase().replace(/\s+/g, '-');
+
+    // Build FormData with all fields
+    const formData = new FormData();
+    formData.append('name', form.name);
+    formData.append('description', form.description);
+    formData.append('base_price', form.base_price);
+    formData.append('is_active', String(form.is_active));
+    formData.append('slug', slug);
+    if (form.brand) formData.append('brand', form.brand);
+    if (form.category) formData.append('category', form.category);
+    if (selectedImage) formData.append('image', selectedImage);
 
     try {
-      const product = await createProduct.mutateAsync(productData);
-
-      if (selectedImage) {
-        const imageFormData = new FormData();
-        imageFormData.append('image', selectedImage);
-        await uploadProductImage.mutateAsync({ formData: imageFormData, productId: product.id });
-      }
-
+      const product = await createProduct.mutateAsync(formData);
       navigate(`/admin/products/${product.id}/edit`);
     } catch (err) {
       const axiosError = err as AxiosError<{ [key: string]: string[] }>;
