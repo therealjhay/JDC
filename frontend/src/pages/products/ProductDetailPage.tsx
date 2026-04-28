@@ -13,7 +13,7 @@ export default function ProductDetailPage() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
 
-  const whatsappNumber = import.meta.env.NEXT_PUBLIC_WHATSAPP_NUMBER || import.meta.env.VITE_WHATSAPP_NUMBER || '';
+  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '';
   const whatsappLink = whatsappNumber ? `https://wa.me/${whatsappNumber}` : null;
 
   const currentVariant = selectedVariant || (product?.variants?.[0] ?? null);
